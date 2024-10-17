@@ -26,7 +26,7 @@ public class LottoMachine {
             List<List<Integer>> lottoNumbers,
             Integer bonusNumber
     ) {
-        checkWinningNumbers(winningNumbers);
+        checkWinningNumbers(new HashSet<>(winningNumbers));
         this.winningNumbers = winningNumbers;
         this.totalPrice = totalPrice;
         this.lottoNumbers = lottoNumbers;
@@ -39,7 +39,6 @@ public class LottoMachine {
         if (bonusNumber == null) {
             return;
         }
-        LottoNumberValidator.checkLottoNumberRange(bonusNumber);
         if (doesWinningNumbersContain(bonusNumber)) {
             throw new IllegalArgumentException("Bonus number " + bonusNumber + " is wrong.");
         }
@@ -50,17 +49,10 @@ public class LottoMachine {
                 .anyMatch(it -> it.equals(bonusNumber));
     }
 
-    private static void checkWinningNumbers(List<Integer> winningNumbers) {
-        if (winningNumbers.size() != 6) {
-            throw new IllegalArgumentException("input length must be less than or equal to 6");
-        }
-
-        Set<Integer> winningNumbersSet = new HashSet<>(winningNumbers);
-        if (winningNumbersSet.size() != winningNumbers.size()) {
+    private static void checkWinningNumbers(Set<Integer> winningNumbers) {
+        if (6 != winningNumbers.size()) {
             throw new IllegalArgumentException("winning numbers contain duplicate numbers");
         }
-
-        winningNumbers.forEach(LottoNumberValidator::checkLottoNumberRange);
     }
 
     private void setLottos() {

@@ -1,10 +1,12 @@
 import model.LottoBundle;
 import model.LottoMachine;
+import model.LottoNumber;
 import model.RandomLottoNumberGenerateImpl;
 import view.InputView;
 import view.ResultView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LottoApplication {
     public static void main(String[] args) {
@@ -22,14 +24,16 @@ public class LottoApplication {
         ResultView.printNumberOfLotto(lottoBundle.getCountOfRandomLottoNumbers(), countOfManualLottoNumbers);
         ResultView.printLottoNumbers(lottoBundle.getLottoNumbers());
 
-        List<Integer> winningNumbers = InputView.getWinningNumbers();
-        Integer bonusNumber = InputView.getBonusNumber();
+        List<Integer> winningNumbers = InputView.getWinningNumbers().stream()
+                .map(LottoNumber::getNumber)
+                .collect(Collectors.toList());
+        LottoNumber bonusNumber = InputView.getBonusNumber();
 
         LottoMachine lottoMachine = new LottoMachine(
                 winningNumbers,
                 totalPrice,
                 lottoBundle.getLottoNumbers(),
-                bonusNumber
+                bonusNumber.getNumber()
         );
 
         ResultView.printLottoStatistics(lottoMachine.getStatistics());
